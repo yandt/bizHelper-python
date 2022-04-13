@@ -75,6 +75,8 @@ class Rule(BASE, UmsMixin):
                            server_default='valid')
     insertTime: datetime = Column(DateTime, default=datetime.now(), comment='新增时间', nullable=False)
     modifyTime: datetime = Column(DateTime, comment='修改时间', onupdate=datetime.now())
+    # 查询时表达式，仅查询时赋值
+    hasRule: int = query_expression()
 
 
 class Role(BASE, UmsMixin):

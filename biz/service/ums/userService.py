@@ -1,14 +1,8 @@
-import jwt
-from fastapi import Depends, HTTPException
-from fastapi.security import OAuth2PasswordBearer
-from jwt import PyJWTError
+
 from sqlalchemy import or_, desc
-from starlette import status
 
 from biz.dao.ums import userDao
-from biz.dao import baseDao
 from biz.model.ums import User
-from config import SECRET_KEY, ALGORITHM, TOKEN_URL
 
 from passlib.context import CryptContext
 
@@ -72,20 +66,3 @@ def authenticate_user(user: User, plain_password: str):
     return verify_password(plain_password, user.password)
 
 
-async def getCurrentUser(token: str = Depends(OAuth2PasswordBearer(tokenUrl=TOKEN_URL))):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
-        if username is None:
-            raise credentials_exception
-    except PyJWTError:
-        raise credentials_exception
-    user = getUser(nick=username)
-    if user is None:
-        raise credentials_exception
-    return user

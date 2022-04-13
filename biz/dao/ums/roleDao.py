@@ -27,9 +27,11 @@ def get_one(roleId: int):
         return r
 
 
-def getList(type: str):
+def getList(type: str, validity: str = None):
     with get_session_scope() as session:
-        return session.query(Role).filter(Role.type == type).all()
+        return session.query(Role).filter(
+            Role.type == type,
+            Role.validity == validity if validity is not None else True).all()
 
 
 def getPageList(where: [], order_by: [], limit: int, offset: int):

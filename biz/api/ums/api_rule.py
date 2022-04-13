@@ -51,3 +51,5 @@ async def save(rule: RuleIn):
 async def delete(ruleId: int):
     count = ruleService.delete(ruleId)
     return count
+
+

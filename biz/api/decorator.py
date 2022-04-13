@@ -43,7 +43,6 @@ def apiResponse(response_model=None, code=200, message='',
         @wraps(func)
         async def _wrapper(*args, **kwargs):
             request: Request = kwargs.get('request')
-            # TODO 以下执行权限检查操作，后续计划独立出一个方法，检查权限，此外缺点是方法必须加request参数，也计划使用中间件来写
             if request is not None:
                 path = request.url.path
                 raise ApiException(code=status.HTTP_405_METHOD_NOT_ALLOWED, message='无权执行当前操作')

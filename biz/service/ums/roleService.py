@@ -19,8 +19,8 @@ def getRole(roleId: int):
     return roleDao.get_one(roleId)
 
 
-def getList(type: str):
-    return roleDao.getList(type)
+def getList(type: str, validity: str = None):
+    return roleDao.getList(type, validity)
 
 
 def getPageList(pageno: int = 0,
@@ -39,3 +39,5 @@ def getPageList(pageno: int = 0,
     pagelist = roleDao.getPageList(where, [desc(Role.insertTime)], limit=limit, offset=offset)
 
     return pagelist
+
+

@@ -27,13 +27,14 @@ class RoleIn(BaseModel):
 
 @router.get("/list/{type}")
 @apiResponse(List[RoleIn], exclude_fields=['attribute'])
-async def getList(type: str):
+async def getList(type: str, validity: str = None):
     """
     获取指定角色类型列表
+    :param validity: 有效性
     :param type: 类型
     :return:
     """
-    role_list = roleService.getList(type)
+    role_list = roleService.getList(type, validity)
     return role_list
 
 

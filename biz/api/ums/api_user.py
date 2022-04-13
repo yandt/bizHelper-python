@@ -9,6 +9,7 @@ from biz.api.decorator import apiResponse
 from biz.api.exceptions import ApiException
 from biz.api.model import ResultModel
 from biz.api.ums.api_company import CompanyIn
+from biz.constant import DICT_PATH_DEFAULT_PASSWORD
 from biz.model.ums import User
 from biz.service.dms import dictService
 from biz.service.ums import userService
@@ -30,6 +31,9 @@ class UserIn(BaseModel):
     companyId: Optional[int]
     company: Optional[CompanyIn]
     password: Optional[str]
+    front: Optional[dict]
+    defined: Optional[list[str]]
+    isAdmin: Optional[bool]
 
     class Config:
         orm_mode = True
@@ -49,7 +53,7 @@ async def save(user: UserIn):
         u = userService.getUser(nick=user.nick)
         if u is not None:
             raise ApiException(message='用户名%s已存在，请改变用户名' % user.nick)
-        default_password = dictService.getDictByPath('/system/user/default_password').value
+        default_password = dictService.getDictByPath(DICT_PATH_DEFAULT_PASSWORD).value
         u = User()
         entityUtils.copy(user, u)
         u = userService.save(u, default_password)

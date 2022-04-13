@@ -38,3 +38,10 @@ def getPageList(pageno: int = 0,
     pagelist = ruleDao.getPageList(where, [asc(Rule.path)], limit=limit, offset=offset)
 
     return pagelist
+
+
+def getFrontRuleListByUserId(uid: int):
+    return ruleDao.getFrontRuleListByUserId(uid)
+
+
+
