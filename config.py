@@ -19,10 +19,13 @@ dev_biz_pgsql_db = {
     # 数据库连接URL
     'url': 'postgresql+psycopg2://cost:123456@127.0.0.1:5432/costdb',
     'engine_args': {
+        'echo_pool': True,
+        # 是否显示日志
+        'echo': False,
         # 连接池大小
-        'pool_size': 2,
+        'pool_size': 50,
         # 超过连接池大小最多创建的连接
-        'max_overflow': 0,
+        'max_overflow': 10,
         # 池中没有线程最多等待的时间，否则报错
         'pool_timeout': 30,
         # 多久之后对线程池中的线程进行一次连接回收

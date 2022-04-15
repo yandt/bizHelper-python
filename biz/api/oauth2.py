@@ -39,7 +39,7 @@ def getUserTokenDict(user: User):
     :param user:
     :return:
     """
-    rule_list = ruleService.getFrontRuleListByUserId(user.uid)
+    rule_list = ruleService.getRuleListByUserId(user.uid)
     front_rules = {}
     defined_rules = []
     back_rules = {}

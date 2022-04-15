@@ -73,7 +73,7 @@ def getChildList(companyIds: list[int] = [], parentIds: list[int] = [], validity
          select k.*, loclevel + 1 as loclevel from ums_company k inner join cte c on c."companyId" = k."parentId" 
          )
         select * from cte 
-        where "companyId"||':'||"loclevel" in (select max("companyId"||':'||"loclevel") from cte group by "companyId")
+        where "companyId"*10000+"loclevel" in (select max("companyId"*10000+"loclevel") from cte group by "companyId")
         {validity_cont} {isdelete_cont} 
         order by "loclevel", "code"
     """.format(

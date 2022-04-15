@@ -5,19 +5,12 @@ from sqlalchemy.orm import Session, Query
 from contextlib import contextmanager
 
 
-def get_conn() -> Pool:
-    conn = Pool(biz_db)
-    return conn;
-
-
 def get_session() -> Session:
-    conn = get_conn()
-    return conn.get_session()
+    return Pool().session
 
 
 def get_engine():
-    conn = get_conn()
-    return conn.get_engine()
+    return Pool().gen_engine()
 
 
 # 定义上下文函数，使能够自动进行事务处理，
@@ -32,10 +25,10 @@ def get_session_scope() -> Session:
         yield session
         # print('commit')
         session.commit()
-    except:
-        # print('rollback')
+    except Exception as e:
+        # print('session-rollback')
         session.rollback()
-        raise
+        raise e
     finally:
-        # print('close')
+        # print('session-close')
         session.close()

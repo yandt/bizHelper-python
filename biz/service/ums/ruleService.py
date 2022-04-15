@@ -40,8 +40,8 @@ def getPageList(pageno: int = 0,
     return pagelist
 
 
-def getFrontRuleListByUserId(uid: int):
-    return ruleDao.getFrontRuleListByUserId(uid)
+def getRuleListByUserId(uid: int, type_list: list[str] = ['front', 'defined', 'back']):
+    return ruleDao.getRuleListByUserId(uid, type_list)
 
 
 

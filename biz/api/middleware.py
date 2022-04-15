@@ -6,6 +6,7 @@ import re
 
 from biz.api.exceptions import ApiException
 from biz.api.oauth2 import getUserOnRequest
+from common import pathUtils
 from config import TOKEN_URL
 
 
@@ -21,20 +22,11 @@ def checkPathOnRuleList(path: str, method: str, rules: dict):
 
     def keys_func(d):
         rule = d[0]
-        if rule == cur:
-            return True
-        if cur.startswith(rule):
-            return True
-        patter = re.sub(r'\/', '\\/', rule)
-        patter = re.sub(r'\{\w+\}', '\\\\w+', patter)
-        if re.match(patter, cur) is None:
-            return False
-        return True
+        return pathUtils.fastApiPathMatches(rule, cur)
 
     rules = sorted(rules.items(), key=lambda d: d[0].count('/'), reverse=True)
     rules_filter = filter(keys_func, rules)
     rows = list(rules_filter)
-    print(rows)
     if len(rows) == 0:
         return True
     for row in rows:

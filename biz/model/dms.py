@@ -39,6 +39,26 @@ class Dict(DmsMixin, BASE):
     __table_args__ = (Index('dict_parent_id_name', 'parentId', 'name'),)
 
 
+class Menu(DmsMixin, BASE):
+    """
+    字典类
+    """
+    __comment__ = '系统菜单'
+    menuId: int = Column(Integer, primary_key=True, comment='菜单唯一ID')
+    parentId: int = Column(Integer, comment='上级菜单ID', nullable=False, server_default="0", index=True)
+    name: str = Column(String(50), comment='名称', nullable=False)
+    path: str = Column(String, comment='菜单路径')
+    icon: str = Column(String(100), unique=True, comment='图标', index=True)
+    validity: str = Column(String(20), comment='有效性：invalid无效，valid有效', index=True, default='valid', nullable=False)
+    attribute: dict = Column(JSON, comment='节点属性', default={}, server_default="{}")
+    sortNo: int = Column(Integer, comment='排序编号', default=0, server_default="0")
+    insertTime: datetime = Column(DateTime, default=datetime.now(), comment='新增时间', nullable=False)
+    modifyTime: datetime = Column(DateTime, comment='修改时间', onupdate=datetime.now())
+
+    # 查询时表达式，仅查询时赋值
+    loclevel: int = query_expression()
+
+
 def init_db(engine, tables=None, checkfirst=True):
     """
     初始化表

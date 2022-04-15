@@ -94,7 +94,7 @@ def getParentList(dictId: int, session: Session = None) -> list:
          select k.*, loclevel + 1 as loclevel from dms_dict k join cte c on c."parentId" = k."dictId" 
          )
         select * from cte 
-        where "dictId"||':'||"loclevel" in (select max("dictId"||':'||"loclevel") from cte group by "dictId")
+        where "dictId"*100000+"loclevel" in (select max("dictId"*100000+"loclevel") from cte group by "dictId")
         order by "loclevel" desc
     """
 
@@ -122,7 +122,7 @@ def getChildList(dictIds: list[int] = [], parentIds: list[int] = [], validity: s
          select k.*, loclevel + 1 as loclevel from dms_dict k inner join cte c on c."dictId" = k."parentId" 
          )
         select * from cte 
-        where "dictId"||':'||"loclevel" in (select max("dictId"||':'||"loclevel") from cte group by "dictId")
+        where "dictId"*100000+"loclevel" in (select max("dictId"*100000+"loclevel") from cte group by "dictId")
         {validity_cont}
         order by "loclevel"
     """.format(

@@ -4,8 +4,9 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 
 from biz.api.decorator import apiResponse
-from biz.service.dms import dictService
-from biz.service.ums import companyService
+from biz.api.dms.api_menu import MenuIn
+from biz.service.dms import dictService, menuService
+from biz.service.ums import companyService, ruleService
 
 router = APIRouter(prefix="/pub")
 
@@ -65,3 +66,17 @@ async def getDictTree(path: str, nodeType: str = 'node', validity: str = 'valid'
     """
     dict_tree = dictService.getChildTreeForPath(path=path, validity=validity, nodeType=nodeType, isTopDict=isTop)
     return dict_tree
+
+
+@router.get("/menu_list")
+@apiResponse(List[MenuIn])
+async def getMenuList(uid: int = None):
+    """
+    获取菜单列表
+    :param uid: 传入的用户ID
+    :return:
+    """
+    main_menu_id = dictService.getDictByPath('/system/main_menu_id').value
+    rule_list = ruleService.getRuleListByUserId(uid, ['front'])
+    menu_list = menuService.getMenuList(parentId=[int(main_menu_id)], isTree=True, validity='valid', allow_rules= rule_list)
+    return menu_list

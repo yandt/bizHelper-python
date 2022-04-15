@@ -41,7 +41,7 @@ def getPageList(where: [], order_by: [], limit: int, offset: int):
     return list1
 
 
-def getFrontRuleListByUserId(uid: int):
+def getRuleListByUserId(uid: int, type_list: list[str] = ['front', 'defined', 'back']):
     sql = """
         with t1 as (
             select json_array_elements_text("attribute"->'functionRoles')::integer as roleid
@@ -56,12 +56,12 @@ def getFrontRuleListByUserId(uid: int):
         from ums_rule r 
         left join t2 on r."ruleId" = t2."ruleid" 
         where type =  any(:TYPELIST)
-          and validity = 'valid'
+          and validity = 'valid' 
     """
 
     with get_session_scope() as session:
         res = session.query(Rule).from_statement(text(sql)).params(
-            USERID=uid, TYPELIST=['front', 'defined', 'back']).options(
+            USERID=uid, TYPELIST=type_list).options(
             with_expression(Rule.hasRule, func.count().label('has_rule')))
 
     return res.all()

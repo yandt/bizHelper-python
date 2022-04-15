@@ -18,8 +18,8 @@ def get_page_list(entities: [], where: [], order_by: [], limit: int, offset: int
     return PageList(total=total, rows=rows)
 
 
-def get_list(entities: [], where: [], order_by: []):
+def get_list(entities: [], where: [], order_by: [], limit: int = None):
     with get_session_scope() as session:
-        q = session.query(*entities).filter(*where).order_by(*order_by)
+        q = session.query(*entities).filter(*where).order_by(*order_by).limit(limit)
         rows = q.all()
     return rows
