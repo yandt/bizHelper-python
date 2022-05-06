@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import List
 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, String, Integer, DateTime, JSON, ForeignKey, func, Boolean, Index, ARRAY
@@ -93,23 +92,3 @@ class Role(BASE, UmsMixin):
     modifyTime: datetime = Column(DateTime, comment='修改时间', onupdate=datetime.now())
 
 
-def init_db(engine, tables=None, checkfirst=True):  #
-    """
-    初始化表
-    :param checkfirst:
-    :param tables:
-    :param engine: 数据库引擎
-    :return:
-    """
-    BASE.metadata.create_all(engine, tables, checkfirst)
-
-
-def drop_db(engine, tables=None, checkfirst=True):  #
-    """
-    删除表
-    :param tables:
-    :param checkfirst:
-    :param engine: 数据库引擎
-    :return:
-    """
-    BASE.metadata.drop_all(engine, tables, checkfirst)

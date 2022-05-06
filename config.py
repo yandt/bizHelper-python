@@ -1,4 +1,3 @@
-
 # 业务库开发环境配置
 dev_biz_db = {
     # 数据库连接URL
@@ -42,6 +41,8 @@ SECRET_KEY = "c6d3998918fe3099adced3fb5a37895e957352cb579b999acf6e5108c3470d3e"
 # 令牌算法
 ALGORITHM = "HS256"
 # 令牌有效时长，默认24*60分钟
-ACCESS_TOKEN_EXPIRE_MINUTES = 60*8
+ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 8
 # 令牌访问URL
 TOKEN_URL = '/api/login'
+# redis访问URL
+REDIS_URL = 'redis://localhost:6379'

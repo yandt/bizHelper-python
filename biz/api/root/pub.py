@@ -78,5 +78,6 @@ async def getMenuList(uid: int = None):
     """
     main_menu_id = dictService.getDictByPath('/system/main_menu_id').value
     rule_list = ruleService.getRuleListByUserId(uid, ['front'])
-    menu_list = menuService.getMenuList(parentId=[int(main_menu_id)], isTree=True, validity='valid', allow_rules= rule_list)
+    menu_list = menuService.getMenuList(parentId=[int(main_menu_id)], isTree=True,
+                                        validity='valid', allow_rules=rule_list)
     return menu_list

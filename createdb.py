@@ -1,7 +1,5 @@
 from importlib import import_module
 
-from sqlalchemy import Table
-
 from biz import conn
 from biz.model.ums import User
 from biz.service.ums import userService
@@ -39,21 +37,25 @@ print('开始%s创建架构%s下的%s...' % (cover, schema, tables_name))
 engine = conn.get_engine()
 engine.echo = True
 
-tables = dbname.split(',')
-tables = [getattr(module, t).__table__ for t in tables]
+
+if len(dbname) > 0:
+    tables = dbname.split(',')
+    tables = [getattr(module, t).__table__ for t in tables]
+else:
+    tables = None
 
 if is_cover == 'YYY':
-    print('开始删除表%s' % tables)
+    print('开始删除%s表' % (tables if tables is not None else '所有'))
     if len(dbname) == 0:
-        module.drop_db(engine)
+        module.BASE.metadata.drop_all(engine, checkfirst=True)
     else:
-        module.drop_db(engine, tables)
+        module.BASE.metadata.drop_all(engine, tables, checkfirst=True)
 
-print('开始创建表%s' % tables)
+print('开始创建%s表' % (tables if tables is not None else '所有'))
 if len(dbname) == 0:
-    module.init_db(engine)
+    module.BASE.metadata.create_all(engine, checkfirst=True)
 else:
-    module.init_db(engine, tables)
+    module.BASE.metadata.create_all(engine, tables, checkfirst=True)
 
 print('表格建立成功')
 

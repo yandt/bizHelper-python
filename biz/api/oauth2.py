@@ -54,7 +54,7 @@ def getUserTokenDict(user: User):
     user.front = front_rules
     user.defined = defined_rules
     user.back = back_rules
-    admin_nick = dictService.getDictByPath(DICT_PATH_ADMIN_NICK).value   # 从数据字典获取指定的管理员用户名
+    admin_nick = dictService.getDictByPath(DICT_PATH_ADMIN_NICK).value  # 从数据字典获取指定的管理员用户名
     if user.nick == admin_nick:
         user.isAdmin = True
 
@@ -65,11 +65,13 @@ def getUserTokenDict(user: User):
     # 生成并返回token信息
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token_dict = create_access_token(
-        data={"nick": user.nick,
-              "front": user.front,  # 前端权限路径
-              "defined": user.defined,  # 自定义权限代码
-              "back": user.back,  # 后端权限路径
-              "isAdmin": user.nick == admin_nick},
+        data={
+            "uid": user.uid,
+            "nick": user.nick,
+            "front": user.front,  # 前端权限路径
+            "defined": user.defined,  # 自定义权限代码
+            "back": user.back,  # 后端权限路径
+            "isAdmin": user.nick == admin_nick},
         expires_delta=access_token_expires
     )
     return access_token_dict
@@ -88,12 +90,12 @@ async def getCurrentUser(token: str = Depends(OAuth2PasswordBearer(tokenUrl=TOKE
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("nick")
-        if username is None:
+        uid: int = payload.get("uid")
+        if uid is None:
             raise credentials_exception
     except PyJWTError as e:
         raise credentials_exception
-    user = getUser(nick=username)
+    user = getUser(uid=uid)
     user.front = payload.get('front')
     user.defined = payload.get('defined')
     user.isAdmin = payload.get('isAdmin')
@@ -114,3 +116,25 @@ async def getUserOnRequest(request: Request):
     scheme, token = get_authorization_scheme_param(authorization)
     user = await getCurrentUser(token)
     return user;
+
+
+async def getCurrentUserId(token: str = Depends(OAuth2PasswordBearer(tokenUrl=TOKEN_URL))):
+    """
+    通过加密TOKEN获取当前用户信息
+    :param token:
+    :return:
+    """
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        uid: int = payload.get("uid")
+        if uid is None:
+            raise credentials_exception
+        return uid
+    except PyJWTError as e:
+        raise credentials_exception
+

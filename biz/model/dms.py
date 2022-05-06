@@ -41,7 +41,7 @@ class Dict(DmsMixin, BASE):
 
 class Menu(DmsMixin, BASE):
     """
-    字典类
+    菜单类
     """
     __comment__ = '系统菜单'
     menuId: int = Column(Integer, primary_key=True, comment='菜单唯一ID')
@@ -58,24 +58,3 @@ class Menu(DmsMixin, BASE):
     # 查询时表达式，仅查询时赋值
     loclevel: int = query_expression()
 
-
-def init_db(engine, tables=None, checkfirst=True):
-    """
-    初始化表
-    :param checkfirst:
-    :param tables:
-    :param engine: 数据库引擎
-    :return:
-    """
-    BASE.metadata.create_all(engine, tables, checkfirst)
-
-
-def drop_db(engine, tables=None, checkfirst=True):  #
-    """
-    删除表
-    :param tables:
-    :param checkfirst:
-    :param engine: 数据库引擎
-    :return:
-    """
-    BASE.metadata.drop_all(engine, tables, checkfirst)

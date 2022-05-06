@@ -45,7 +45,7 @@ def register_middleware(app: FastAPI) -> None:
         start_time = time.time()
         response = await call_next(request)
         process_time = time.time() - start_time
-        response.headers["X-Process-Time"] = str(process_time * 1000)
+        response.headers["X-Process-Time"] = str(process_time)
         return response
 
     @app.middleware("http")
@@ -56,7 +56,7 @@ def register_middleware(app: FastAPI) -> None:
         :param call_next:
         :return:
         """
-        if request.url.path != TOKEN_URL:
+        if request.url.path != TOKEN_URL and request.url.path.startswith('/api'):
             user = await getUserOnRequest(request)
             if hasattr(user, 'back'):
                 back_paths = user.back

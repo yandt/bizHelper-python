@@ -67,6 +67,7 @@ async def saveSortNo(menuId: int, sortNo: int):
         menuService.save(menu)
     return menu
 
+
 @router.delete('')
 @apiResponse(message='菜单删除成功')
 async def delete(menuId: int):
